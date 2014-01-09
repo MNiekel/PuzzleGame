@@ -66,6 +66,14 @@ public class Level extends ArrayList<Integer> {
 		return -1;
 	}
 	
+	public boolean move(int position) {
+		int dest = moveable(position);
+		
+		if (dest == -1) return false;
+		swap(position, dest);
+		return true;
+	}
+	
 	public void shuffle(int steps) {
 		int empty = 0;
 		
