@@ -12,7 +12,7 @@
 	    android:id="@+id/containerFrameLayout"
 	    android:layout_width="0dp"
 	    android:layout_height="wrap_content"
-	    android:layout_gravity="center_vertical"
+	    android:layout_gravity="center_vertical|center_horizontal"
 	    android:layout_marginLeft="10dp"
 	    android:layout_weight="1" >
     </FrameLayout>
@@ -23,21 +23,24 @@
         android:layout_height="match_parent"
         android:layout_weight="1" >
         
-        <TextView
+        <TextView style="@style/large"
         	android:id="@+id/turnsTextView1"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
+        	android:paddingRight="4dp"
         	android:layout_alignParentTop="true"
+        	android:layout_marginTop="40dp"
+        	android:layout_centerHorizontal="true"
         	android:text="@string/turns" />
     
-    	<TextView
+    	<TextView style="@style/large"
         	android:id="@+id/turnsTextView2"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:layout_alignParentTop="true"
+        	android:layout_alignBaseline="@id/turnsTextView1"
         	android:layout_toRightOf="@id/turnsTextView1" />
     	
-        <TextView
+        <TextView style="@style/large"
     	    android:id="@+id/messageTextView"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"

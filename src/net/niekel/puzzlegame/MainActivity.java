@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
 	
@@ -21,6 +23,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	static final String STATE_SOLVED = "solved";
 	
 	private Level level = new Level();
+	
+	private int steps = 100;
 	
 	private int size;
 	private int num_cells;
@@ -72,6 +76,24 @@ public class MainActivity extends Activity implements OnClickListener {
 		return true;
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.resize:
+	            change_size(null);
+	            return true;
+	        case R.id.reset:
+	            reset_raster();
+	            return true;
+	        case R.id.dev:
+	            dev();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
 	private void build_raster() {
 		FrameLayout fl = (FrameLayout) findViewById(R.id.containerFrameLayout);
 		GridLayout raster;
@@ -84,6 +106,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			raster = (GridLayout) getLayoutInflater().inflate(R.layout.layout3x3, null);
 			
 		}
+		
+		//LayoutParams layout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.);
+
 		
 		for (int i = 0; i < num_cells; i++){
 			Button b = new Button(this);
@@ -146,7 +171,17 @@ public class MainActivity extends Activity implements OnClickListener {
 		TextView message = (TextView) findViewById(R.id.messageTextView);
 		message.setText("");
 		
-		level.shuffle(5);
+		if (!solved) {
+			String text = "The puzzle is already shuffled!";
+			int duration = Toast.LENGTH_SHORT;
+
+			Toast toast = Toast.makeText(this, text, duration);
+			
+			toast.show();
+			return;
+		}
+		
+		level.shuffle(steps);
 		update_raster();
 		update_turns(0);
 		solved = level.solved();
@@ -162,6 +197,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		level.build(size*size);
 		build_raster();
 		update_raster();
+		solved = true;
 	}
 	
 	public void change_size(View v) {
@@ -172,5 +208,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		num_cells = size*size;
 		reset_raster();
+	}
+	
+	public void dev() {
+		steps = 1;
 	}
 }
