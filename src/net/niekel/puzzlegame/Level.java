@@ -1,11 +1,12 @@
 package net.niekel.puzzlegame;
 
+
 import java.util.ArrayList;
 
 public class Level extends ArrayList<Integer> {
-
-	private static final long serialVersionUID = 1L;
 	
+	private static final long serialVersionUID = 1L;
+
 	public Level() {
 	}
 	
@@ -24,10 +25,10 @@ public class Level extends ArrayList<Integer> {
 	
 	public void build(int size) {
 		clear();
-		for (int i = 0; i < (size-1); i++) {
-			add(i, i+1);
+		for (int i = 0; i < size; i++) {
+			add(i, i);
 		}
-		add(size-1, -1);
+		//add(size-1, -1);
 	}
 	
 	public ArrayList<Integer> find_neighbours(int pos) {
@@ -59,7 +60,7 @@ public class Level extends ArrayList<Integer> {
 		ArrayList<Integer> neighbours = find_neighbours(position);
 
 		for (int n : neighbours) {
-			if (get(n) == -1) {
+			if (get(n) == size()-1) {
 				return n;
 			}
 		}
@@ -78,7 +79,7 @@ public class Level extends ArrayList<Integer> {
 		int empty = 0;
 		
 		for (int i = 0; i < size(); i++) {
-			if (get(i) == -1) {
+			if (get(i) == size()-1) {
 				empty = i;
 			}
 		}
@@ -97,8 +98,8 @@ public class Level extends ArrayList<Integer> {
 	}
 	
 	public boolean solved() {
-		for (int i = 0; i < size()-1; i++) {
-			if (get(i) != i+1) return false;
+		for (int i = 0; i < size(); i++) {
+			if (get(i) != i) return false;
 		}
 		return true;
 	}
