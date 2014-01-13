@@ -8,13 +8,14 @@ public class PuzzleSolver {
 	
 	private Level start = new Level();
 	private int max_depth;
+	private int min_steps = -1;
 	private boolean solvable = false;
 	private ArrayList<Level> searched = new ArrayList<Level>();
 
 	public PuzzleSolver(int max) {
 		// TODO Auto-generated constructor stub
 		max_depth = max + 1;
-		//max_depth = 11;
+		max_depth = 5;
 	}
 	
 	private Level get_left_branch(Level l) {
@@ -58,7 +59,57 @@ public class PuzzleSolver {
 		} else {
 			return null;
 		}
-	}		
+	}
+	
+	private boolean test2(Level l, int steps) {
+		//Log.d("test", "steps = " +steps);
+		if (l == null) {
+			return false;
+		}
+		
+		if (steps > max_depth) {
+			return false;
+		}
+		
+		if (searched.contains(l)) {
+			//Log.d("test", "level in searched " +l);
+			return false;
+		}
+		
+		searched.add(l);
+		
+		if (l.solved()) {
+			Log.v("test", "level solved in steps: " +steps);
+			solvable = true;
+			max_depth = Math.min(steps, max_depth);
+			return true;
+		}
+		
+		steps++;
+		
+		Level right = new Level();
+		right.copy(l);
+		Log.v("test", "testing right " +steps);
+		if (!test2(get_right_branch(right), steps)) {
+			Level down = new Level();
+			down.copy(l);
+			Log.v("test", "testing down " +steps);
+			if (!test2(get_down_branch(down), steps)) {
+				Level left = new Level();
+				left.copy(l);
+				Log.v("test", "testing left " +steps);
+				if (!test2(get_left_branch(left), steps)) {
+					Level up = new Level();
+					up.copy(l);
+					Log.v("test", "testing up " +steps);
+					if (!test2(get_up_branch(up), steps)) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
 	private void test(Level l, int steps) {
 		//Log.d("test", "steps = " +steps);
 		if (l == null) {
@@ -121,13 +172,69 @@ public class PuzzleSolver {
 		}
 		start.copy(state);
 		
-		test(start, 0);
+		//test(start, 0);
+		boolean result = test2(start, 0);
 		
-		Log.d("solve", "searched = " +searched);
+		if (result) {
+			Log.d("solve", "found solution");
+		} else {
+			Log.d("solve", "no solution");
+		}
+		
+		//Log.d("solve", "searched = " +searched);
 		
 		if (solvable) {
 			return max_depth;
 		}
-		return -1;
+		return min_steps;
+	}
+	
+	public boolean find_solution(Level level, int depth) {
+		if (level == null) return false;
+		if (level.solved()) {
+			Log.d("find_solution", "solved level, depth = " +depth);
+			return true;
+		}
+		
+		if (depth >= max_depth) return false;
+		
+		depth++;
+				
+		Level right = new Level();
+		right.copy(level);
+		Level left = new Level();
+		left.copy(level);
+		Level up = new Level();
+		up.copy(level);
+		Level down = new Level();
+		down.copy(level);
+		
+		Level[] children = {get_right_branch(right), get_left_branch(left), get_down_branch(down), get_up_branch(up)};
+		//Level[] children = {get_right_branch(right) };
+		
+		Log.v("find_solution", "children = " +children);
+		
+		for (Level child : children) {
+			if (child != null) {
+				if (child.solved()) {
+					Log.d("find_solution", "solved level, depth = " +depth);
+					max_depth = depth;
+					min_steps = depth;
+					return true;
+				}
+			}
+		}
+		
+		for (Level child : children) {
+			Log.v("find_solution", "child = " +child);
+			
+			if (find_solution(child, depth)) {
+				Log.v("find_solution", "depth = " +depth);
+				min_steps = Math.max(depth, min_steps);
+				return true;
+			}
+		}
+		
+	return false;
 	}
 }
