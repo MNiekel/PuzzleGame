@@ -22,7 +22,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 	
 	private Level level = new Level();
 	
-	private int steps = 99;
+	private int steps = 9;
 	
 	private int size;
 	private int turn;
