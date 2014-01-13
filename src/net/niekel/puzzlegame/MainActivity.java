@@ -151,7 +151,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		int move_to = level.moveable(position);
 		
 		if (move_to == -1) return false;
-						
+		update_turns(++turn);
 		level.swap(position, move_to);
 		raster.update(level);
 		
