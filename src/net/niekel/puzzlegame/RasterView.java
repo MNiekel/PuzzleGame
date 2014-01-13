@@ -12,6 +12,7 @@ public class RasterView extends LinearLayout {
 	private int rows = 0;
 	private Context context;
 	private int[] puzzle4x4 = new int[16];
+	@SuppressWarnings("unused")
 	private int[] puzzle3x3 = new int[9];
 
 	public RasterView(Context context) {

@@ -17,21 +17,94 @@ public class Level extends ArrayList<Integer> {
 		}
 	}
 	
-	public void swap(int p1, int p2) {
+	public void build(int size) {
+		//creates an ordered level with size pieces
+		clear();
+		for (int i = 0; i < size; i++) {
+			add(i, i);
+		}
+	}
+	
+	public int slide(int position) {
+		//slides one or more pieces when possible, returns number of steps
+		int empty = find_empty();
+		int size = (int) Math.sqrt(size());
+
+		if ((position / size) == (empty / size)) {
+			return slide_horizontal(position, empty);
+		} else {
+			if ((position % size) == (empty % size)) {
+				return slide_vertical(position, empty);
+			}
+		}
+		return 0;
+	}
+	
+	public void shuffle(int steps) {
+		//shuffles the current state of the level by steps random steps
+		int empty = find_empty();
+		
+		ArrayList<Integer> neighbours;
+		int rand;
+		int neighbour;
+		
+		for (int i = 0; i < steps; i++) {
+			neighbours = find_neighbours(empty);
+			rand = (int) (Math.random() * neighbours.size());
+			neighbour = neighbours.get(rand);
+			swap(empty, neighbour);
+			empty = neighbour;
+		}
+	}
+	
+	public boolean solved() {
+		//true if level state is start state, else false
+		for (int i = 0; i < size(); i++) {
+			if (get(i) != i) return false;
+		}
+		return true;
+	}
+	
+	private void swap(int p1, int p2) {
 		int tmp = get(p1);
 		set(p1, get(p2));
 		set(p2, tmp);
 	}
 	
-	public void build(int size) {
-		clear();
-		for (int i = 0; i < size; i++) {
-			add(i, i);
+	private int slide_horizontal(int pos, int empty) {
+		int steps = 0;
+		
+		while (empty < pos) {
+			swap(empty, empty+1);
+			steps++;
+			empty++;
 		}
-		//add(size-1, -1);
+		while (empty > pos) {
+			swap(empty, empty-1);
+			steps++;
+			empty--;
+		}
+		return steps;
 	}
 	
-	public ArrayList<Integer> find_neighbours(int pos) {
+	private int slide_vertical(int pos, int empty) {
+		int steps = 0;
+		int size = (int) Math.sqrt(size());
+		
+		while (empty < pos) {
+			swap(empty, empty+size);
+			steps++;
+			empty += size;
+		}
+		while (empty > pos) {
+			swap(empty, empty-size);
+			steps++;
+			empty -= size;
+		}
+		return steps;
+	}	
+	
+	private ArrayList<Integer> find_neighbours(int pos) {
 		ArrayList<Integer> neighbours = new ArrayList<Integer>();
 		int size = (int) Math.sqrt(size());
 		
@@ -55,8 +128,18 @@ public class Level extends ArrayList<Integer> {
 		}
 		return neighbours;
 	}
+
+	private int find_empty() {
+		for (int i = 0; i < size(); i++) {
+			if (get(i) == size()-1) {
+				return i;
+			}
+		}
+		return -1;
+	}
 	
-	public int moveable(int position) {
+	@SuppressWarnings("unused")
+	private int moveable(int position) {
 		ArrayList<Integer> neighbours = find_neighbours(position);
 
 		for (int n : neighbours) {
@@ -66,42 +149,4 @@ public class Level extends ArrayList<Integer> {
 		}
 		return -1;
 	}
-	
-	public boolean move(int position) {
-		int dest = moveable(position);
-		
-		if (dest == -1) return false;
-		swap(position, dest);
-		return true;
-	}
-	
-	public void shuffle(int steps) {
-		int empty = 0;
-		
-		for (int i = 0; i < size(); i++) {
-			if (get(i) == size()-1) {
-				empty = i;
-			}
-		}
-		
-		ArrayList<Integer> neighbours;
-		int rand;
-		int neighbour;
-		
-		for (int i = 0; i < steps; i++) {
-			neighbours = find_neighbours(empty);
-			rand = (int) (Math.random() * neighbours.size());
-			neighbour = neighbours.get(rand);
-			swap(empty, neighbour);
-			empty = neighbour;
-		}
-	}
-	
-	public boolean solved() {
-		for (int i = 0; i < size(); i++) {
-			if (get(i) != i) return false;
-		}
-		return true;
-	}
-
 }

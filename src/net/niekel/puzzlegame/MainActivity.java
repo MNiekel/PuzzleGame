@@ -56,7 +56,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 		raster.init((int) Math.sqrt(level.size()));
 		raster.build();
 		raster.update(level);
-		update_turns(turn);
 	}
     
     @Override
@@ -118,12 +117,8 @@ public class MainActivity extends Activity implements OnTouchListener {
 		
 		level.shuffle(steps);
 		raster.update(level);
-		update_turns(0);
+		turn = 0;
 		solved = level.solved();
-	}
-
-	private void update_turns(int t) {
-		turn = t;
 	}
 	
 	private void reset_raster() {
@@ -148,11 +143,14 @@ public class MainActivity extends Activity implements OnTouchListener {
 		if (level.solved()) return false;
 		
 		int position = view.getId();
-		int move_to = level.moveable(position);
+		int steps = level.slide(position);
+				
+		if (steps == 0) return false;
 		
-		if (move_to == -1) return false;
-		update_turns(++turn);
-		level.swap(position, move_to);
+		turn += steps;
+		Log.v("onTouch", "steps = " +steps);
+		Log.v("onTouch", "Turns taken so far: " +turn);
+		
 		raster.update(level);
 		
 		if (position == level.size()-1) {
