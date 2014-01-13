@@ -3,6 +3,8 @@ package net.niekel.puzzlegame;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 public class Level extends ArrayList<Integer> {
 	
 	private static final long serialVersionUID = 1L;
@@ -27,7 +29,7 @@ public class Level extends ArrayList<Integer> {
 	
 	public int slide(int position) {
 		//slides one or more pieces when possible, returns number of steps
-		int empty = find_empty();
+		int empty = get_empty();
 		int size = (int) Math.sqrt(size());
 
 		if ((position / size) == (empty / size)) {
@@ -42,7 +44,7 @@ public class Level extends ArrayList<Integer> {
 	
 	public void shuffle(int steps) {
 		//shuffles the current state of the level by steps random steps
-		int empty = find_empty();
+		int empty = get_empty();
 		
 		ArrayList<Integer> neighbours;
 		int rand;
@@ -65,7 +67,52 @@ public class Level extends ArrayList<Integer> {
 		return true;
 	}
 	
-	private void swap(int p1, int p2) {
+	public int get_left(int position) {
+		int size = (int) Math.sqrt(size());
+		
+		if (position % size != 0) {
+			return position - 1;
+		}
+		return -1;
+	}
+	
+	public int get_right(int position) {
+		int size = (int) Math.sqrt(size());
+		
+		if ((position + 1) % size != 0) {
+			return position + 1;
+		}
+		return -1;
+	}
+	
+	public int get_up(int position) {
+		int size = (int) Math.sqrt(size());
+		
+		if (position >= size) {
+			return position - size;
+		}
+		return -1;
+	}	
+	
+	public int get_down(int position) {
+		int size = (int) Math.sqrt(size());
+		
+		if ((position + size) < size()) {
+			return position + size;
+		}
+		return -1;
+	}
+
+	public int get_empty() {
+		for (int i = 0; i < size(); i++) {
+			if (get(i) == size()-1) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public void swap(int p1, int p2) {
 		int tmp = get(p1);
 		set(p1, get(p2));
 		set(p2, tmp);
@@ -106,37 +153,28 @@ public class Level extends ArrayList<Integer> {
 	
 	private ArrayList<Integer> find_neighbours(int pos) {
 		ArrayList<Integer> neighbours = new ArrayList<Integer>();
-		int size = (int) Math.sqrt(size());
+		int neighbour;
 		
-		int neighbour = pos + 1;
-		if ((neighbour % size) != 0) { // right neighbour
+		neighbour = get_right(pos);
+		if (neighbour != -1) {
 			neighbours.add(neighbour);
 		}
-		
-		neighbour = pos + size;
-		if (neighbour < size()) { // down neighbour
+		neighbour = get_left(pos);
+		if (neighbour != -1) {
 			neighbours.add(neighbour);
 		}
-		
-		neighbour = pos - 1;
-		if ((pos % size) != 0) { // left neighbour
+		neighbour = get_up(pos);
+		if (neighbour != -1) {
 			neighbours.add(neighbour);
 		}
-		neighbour = pos - size;
-		if (neighbour >= 0) { // up neighbour
+		neighbour = get_down(pos);
+		if (neighbour != -1) {
 			neighbours.add(neighbour);
 		}
+				
 		return neighbours;
 	}
 
-	private int find_empty() {
-		for (int i = 0; i < size(); i++) {
-			if (get(i) == size()-1) {
-				return i;
-			}
-		}
-		return -1;
-	}
 	
 	@SuppressWarnings("unused")
 	private int moveable(int position) {

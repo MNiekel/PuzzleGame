@@ -22,7 +22,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 	
 	private Level level = new Level();
 	
-	private int steps = 100;
+	private int steps = 7;
 	
 	private int size;
 	private int turn;
@@ -38,6 +38,8 @@ public class MainActivity extends Activity implements OnTouchListener {
 			turn = 0;
 			solved = true;
 			level.build(size*size);
+			level.shuffle(steps);
+			solved = level.solved();
 		} else {
 			solved = savedInstanceState.getBoolean(STATE_SOLVED);
 			turn = savedInstanceState.getInt(STATE_TURN);
@@ -105,6 +107,13 @@ public class MainActivity extends Activity implements OnTouchListener {
 		Button button = (Button) findViewById(R.id.shuffleButton);
 		button.setText("Shuffle");
 		
+		PuzzleSolver test = new PuzzleSolver(steps);
+		int min_steps = test.solve(level);
+		Log.d("MainActivity", "level = " + level);
+		Log.d("MainActivity", "min steps = " + min_steps);
+		
+		
+		/*
 		if (!solved) {
 			String text = "The puzzle is already shuffled!";
 			int duration = Toast.LENGTH_SHORT;
@@ -119,6 +128,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		raster.update(level);
 		turn = 0;
 		solved = level.solved();
+		*/
 	}
 	
 	private void reset_raster() {
