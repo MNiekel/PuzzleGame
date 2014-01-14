@@ -1,7 +1,8 @@
 package net.niekel.puzzlegame;
 
-
 import java.util.ArrayList;
+
+@SuppressWarnings("unused")
 
 public class Level extends ArrayList<Integer> {
 	
@@ -138,7 +139,6 @@ public class Level extends ArrayList<Integer> {
 		return -1;
 	}
 	
-	@SuppressWarnings("unused")
 	private int moveable(int position) {
 		ArrayList<Integer> neighbours = find_neighbours(position);
 

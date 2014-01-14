@@ -2,17 +2,18 @@ package net.niekel.puzzlegame;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.util.Log;
+
+@SuppressWarnings("unused")
 
 public class RasterView extends LinearLayout {
 
 	private int rows = 0;
 	private Context context;
 	private int[] puzzle4x4 = new int[16];
-	@SuppressWarnings("unused")
 	private int[] puzzle3x3 = new int[9];
 
 	public RasterView(Context context) {
@@ -38,10 +39,9 @@ public class RasterView extends LinearLayout {
 	public void build() {
 		
 		if (getChildCount() > 0) {
-			Log.d("RasterView:build", "Delete all children");
 			removeAllViews();
 		}
-		    
+				    
 		setWeightSum(rows);
 		
 		for (int x = 0; x < rows; x++) {
@@ -53,17 +53,22 @@ public class RasterView extends LinearLayout {
 	public void update(Level level) {
 		for (int i = 0; i < level.size(); i++) {
 			ImageView v = (ImageView) findViewById(i);
-			v.setImageResource(puzzle4x4[level.get(i)]);
+			if (level.size() == 16) {
+				v.setImageResource(puzzle4x4[level.get(i)]);
+			} else {
+				v.setImageResource(puzzle3x3[level.get(i)]);
+			}
 		}
 	}
 	
 	public void reset(Level level) {
-		//TODO: implement other sized puzzles
 		int s = (int) Math.sqrt(level.size());
 		if (s == rows) {
 			update(level);
 		} else {
-			Log.d("RasterView:reset", "New puzzle size differs from current size: Not yet implemented");
+			rows = s;
+			build();
+			update(level);
 		}
 	}
 	
@@ -84,6 +89,16 @@ public class RasterView extends LinearLayout {
 		puzzle4x4[13] = R.drawable.piece_4x4_13;
 		puzzle4x4[14] = R.drawable.piece_4x4_14;
 		puzzle4x4[15] = R.drawable.piece_4x4_15;
+		
+		puzzle3x3[0] = R.drawable.piece_3x3_0;
+		puzzle3x3[1] = R.drawable.piece_3x3_1;
+		puzzle3x3[2] = R.drawable.piece_3x3_2;
+		puzzle3x3[3] = R.drawable.piece_3x3_3;
+		puzzle3x3[4] = R.drawable.piece_3x3_4;
+		puzzle3x3[5] = R.drawable.piece_3x3_5;
+		puzzle3x3[6] = R.drawable.piece_3x3_6;
+		puzzle3x3[7] = R.drawable.piece_3x3_7;
+		puzzle3x3[8] = R.drawable.piece_3x3_8;
 	}
 
 	private class ColView extends LinearLayout {
