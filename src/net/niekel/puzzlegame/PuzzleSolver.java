@@ -15,7 +15,7 @@ public class PuzzleSolver {
 	public PuzzleSolver(int max) {
 		// TODO Auto-generated constructor stub
 		max_depth = max + 1;
-		max_depth = 5;
+		max_depth = 7;
 	}
 	
 	private Level get_left_branch(Level l) {
@@ -62,7 +62,7 @@ public class PuzzleSolver {
 	}
 	
 	private boolean test2(Level l, int steps) {
-		//Log.d("test", "steps = " +steps);
+		Log.d("test", "state = " +l);
 		if (l == null) {
 			return false;
 		}
@@ -90,25 +90,40 @@ public class PuzzleSolver {
 		Level right = new Level();
 		right.copy(l);
 		Log.v("test", "testing right " +steps);
-		if (!test2(get_right_branch(right), steps)) {
-			Level down = new Level();
-			down.copy(l);
-			Log.v("test", "testing down " +steps);
-			if (!test2(get_down_branch(down), steps)) {
-				Level left = new Level();
-				left.copy(l);
-				Log.v("test", "testing left " +steps);
-				if (!test2(get_left_branch(left), steps)) {
-					Level up = new Level();
-					up.copy(l);
-					Log.v("test", "testing up " +steps);
-					if (!test2(get_up_branch(up), steps)) {
-						return false;
-					}
-				}
-			}
+		test2(get_right_branch(right), steps);
+		
+		if (steps > max_depth) {
+			return false;
 		}
-		return true;
+		
+		Level down = new Level();
+		down.copy(l);
+		Log.v("test", "testing down " +steps);
+		test2(get_down_branch(down), steps);
+		
+		if (steps > max_depth) {
+			return false;
+		}
+		
+		Level left = new Level();
+		left.copy(l);
+		Log.v("test", "testing left " +steps);
+		test2(get_left_branch(left), steps);
+		
+		if (steps > max_depth) {
+			return false;
+		}
+		
+		Level up = new Level();
+		up.copy(l);
+		Log.v("test", "testing up " +steps);
+		test2(get_up_branch(up), steps);
+		
+		if (steps > max_depth) {
+			return false;
+		}
+		
+		return solvable;
 	}
 	private void test(Level l, int steps) {
 		//Log.d("test", "steps = " +steps);
