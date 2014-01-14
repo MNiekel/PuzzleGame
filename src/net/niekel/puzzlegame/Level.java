@@ -1,6 +1,5 @@
 package net.niekel.puzzlegame;
 
-
 import java.util.ArrayList;
 
 import android.util.Log;
@@ -176,7 +175,6 @@ public class Level extends ArrayList<Integer> {
 	}
 
 	
-	@SuppressWarnings("unused")
 	private int moveable(int position) {
 		ArrayList<Integer> neighbours = find_neighbours(position);
 

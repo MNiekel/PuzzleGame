@@ -34,7 +34,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		super.onCreate(savedInstanceState);
 		
 		if (savedInstanceState == null) {
-			size = 4;
+			size = 3;
 			turn = 0;
 			solved = true;
 			level.build(size*size);
@@ -124,7 +124,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 			return;
 		}
 		
-		level.shuffle(steps);
+		level.shuffle(steps * size);
 		raster.update(level);
 		turn = 0;
 		solved = level.solved();
@@ -138,7 +138,12 @@ public class MainActivity extends Activity implements OnTouchListener {
 	}
 	
 	public void change_size(View v) {
-		Log.d("MainActivity:change_size", "Change puzzle size not yet implemented");
+		if (size == 3) { 
+			size = 4;
+		} else {
+			size = 3;
+		}
+		reset_raster();
 	}
 	
 	public void dev() {
