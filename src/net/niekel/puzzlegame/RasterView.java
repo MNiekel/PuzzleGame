@@ -98,7 +98,7 @@ public class RasterView extends LinearLayout {
 		puzzle3x3[5] = R.drawable.piece_3x3_5;
 		puzzle3x3[6] = R.drawable.piece_3x3_6;
 		puzzle3x3[7] = R.drawable.piece_3x3_7;
-		puzzle3x3[8] = R.drawable.piece_3x3_8;
+		puzzle3x3[8] = R.drawable.piece_3x3_last;
 	}
 
 	private class ColView extends LinearLayout {

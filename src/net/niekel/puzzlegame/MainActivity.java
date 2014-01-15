@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnTouchListener {
 	
@@ -56,6 +56,8 @@ public class MainActivity extends Activity implements OnTouchListener {
 		raster.init((int) Math.sqrt(level.size()));
 		raster.build();
 		raster.update(level);
+		
+		update_button();
 	}
     
     @Override
@@ -76,76 +78,96 @@ public class MainActivity extends Activity implements OnTouchListener {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
 	    switch (item.getItemId()) {
 	        case R.id.resize:
-	            change_size(null);
+	            resize();
 	            return true;
+	            
+		    /*    
 	        case R.id.reset:
-	            reset_raster();
+	        	reset();
 	            return true;
+	        */
 	        case R.id.dev:
-	            dev();
-	            return true;
+	        	dev();
+	        	return true;
+
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
 
-	private void game_ends() {
-		String text = "You solved the puzzle in " +turn+ " turns!";
-		int duration = Toast.LENGTH_LONG;
-
-		Toast toast = Toast.makeText(this, text, duration);
+	private void end() {
+		String message = getResources().getString(R.string.message);
+		TextView text = (TextView) findViewById(R.id.textView);
 		
-		toast.show();
-		return;
+		message = message + " in " +turn+ " turns.";
+		text.setText(message);
+		update_button();
 	}
 	
-	public void shuffle(View v) {
-		Button button = (Button) findViewById(R.id.shuffleButton);
-		button.setText("Shuffle");
-		
-		if (!solved) {
-			String text = "The puzzle is already shuffled!";
-			int duration = Toast.LENGTH_SHORT;
-
-			Toast toast = Toast.makeText(this, text, duration);
-			
-			toast.show();
-			return;
+	private void update_button() {
+		Button button = (Button) findViewById(R.id.clickButton);
+		if (solved) {
+			button.setText(getResources().getString(R.string.start));
+		} else {
+			button.setText(getResources().getString(R.string.reset));
 		}
+	}
+	
+	private void clear_message() {
+		TextView text = (TextView) findViewById(R.id.textView);
 		
+		text.setText("");
+	}
+	
+	private void reset() {
+		level.build(size*size);
+		raster.reset(level);
+		solved = true;
+		turn=0;
+		
+		update_button();
+		clear_message();
+	}
+	
+	private void shuffle() {
 		level.shuffle(steps * size);
 		raster.update(level);
 		turn = 0;
 		solved = level.solved();
+		update_button();
+		clear_message();
 	}
 	
-	private void reset_raster() {
-		level.build(size*size);
-		raster.reset(level);
-		solved = true;
+	public void button_click(View v) {
+		if (level.solved()) {
+			shuffle();
+		} else {
+			reset();
+		}
 	}
 	
-	public void change_size(View v) {
+	private void resize() {
 		if (size == 3) { 
 			size = 4;
 		} else {
 			size = 3;
 		}
-		reset_raster();
+		reset();
 	}
 	
-	public void dev() {
+	private void dev() {
 		steps = 1;
 	}
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		int id = view.getId();
-		Log.v("MainActivity:onTouch", "id = "+id);
+		Log.d("MainActivity:onTouch", "id = "+id);
 				
-		if (level.solved()) return false;
+		if (solved) return false;
 		
 		int position = view.getId();
 		int steps = level.slide(position);
@@ -153,16 +175,14 @@ public class MainActivity extends Activity implements OnTouchListener {
 		if (steps == 0) return false;
 		
 		turn += steps;
-		Log.v("onTouch", "steps = " +steps);
-		Log.v("onTouch", "Turns taken so far: " +turn);
+		Log.d("onTouch", "Turns taken so far: " +turn);
 		
 		raster.update(level);
 		
 		if (position == level.size()-1) {
 			solved = level.solved();
 			if (solved) {
-				Log.v("Puzzle Game", "You solved the puzzle!");
-				game_ends();
+				end();
 			}
 		}
 		return false;

@@ -7,8 +7,8 @@
     <string name="change_size">Change size</string>
     <string name="dev">Development</string>
     <string name="turns">Turns: </string>
-    <string name="message1">Click shuffle to start</string>
-    <string name="message2">Solved! Well done!</string>
+    <string name="start">Click to start</string>
+    <string name="message">You solved the puzzle</string>
     <string name="resize">resize</string>
     <string name="shuffle">shuffle</string>
 

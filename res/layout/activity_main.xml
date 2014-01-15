@@ -13,18 +13,28 @@
         android:id="@+id/rasterView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:orientation="horizontal" >
 
     </net.niekel.puzzlegame.RasterView>
     
     <Button
-        android:id="@+id/shuffleButton"
+        android:id="@+id/clickButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="42dp"
-        android:onClick="shuffle"
-        android:text="Press to Start" />
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:onClick="button_click" />
+    
+    <TextView 
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp"
+        android:layout_below="@id/rasterView"
+        android:padding="4dp" />
 
 </RelativeLayout>
