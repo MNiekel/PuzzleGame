@@ -88,10 +88,10 @@ public class MainActivity extends Activity implements OnTouchListener {
 	        case R.id.reset:
 	        	reset();
 	            return true;
-	        */
 	        case R.id.dev:
 	        	dev();
 	        	return true;
+	        */
 
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -158,6 +158,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		reset();
 	}
 	
+	@SuppressWarnings("unused")
 	private void dev() {
 		steps = 1;
 	}
