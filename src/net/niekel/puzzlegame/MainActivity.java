@@ -62,10 +62,15 @@ public class MainActivity extends Activity implements OnTouchListener {
 		raster.update(level);
 		
 		update_button();
-		
+	}
+	
+	@Override
+	public void onResume() {
 		click_sound = MediaPlayer.create(this, R.raw.click_sound);
 		slide_sound = MediaPlayer.create(this, R.raw.slide_sound);
 		solved_sound = MediaPlayer.create(this, R.raw.solved_sound);
+		
+		super.onResume();
 	}
 	
 	@Override
