@@ -1,4 +1,4 @@
-package net.niekel.puzzlegame;
+package org.softnez.slidingpuzzle;
 
 import android.content.Context;
 import android.util.AttributeSet;

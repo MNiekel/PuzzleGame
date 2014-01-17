@@ -1,4 +1,4 @@
-package net.niekel.puzzlegame;
+package org.softnez.slidingpuzzle;
 
 import java.util.ArrayList;
 

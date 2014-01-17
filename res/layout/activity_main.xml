@@ -9,15 +9,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
     
-    <net.niekel.puzzlegame.RasterView
+    <org.softnez.slidingpuzzle.RasterView
         android:id="@+id/rasterView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal" >
+        
+    </org.softnez.slidingpuzzle.RasterView>
 
-    </net.niekel.puzzlegame.RasterView>
-    
     <Button
         android:id="@+id/clickButton"
         android:layout_width="wrap_content"
