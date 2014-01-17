@@ -2,6 +2,7 @@ package net.niekel.puzzlegame;
 
 import java.util.ArrayList;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -28,11 +29,14 @@ public class MainActivity extends Activity implements OnTouchListener {
 	private int turn;
 	private boolean solved;
 	private RasterView raster;
+	private MediaPlayer click_sound;
+	private MediaPlayer slide_sound;
+	private MediaPlayer solved_sound;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+				
 		if (savedInstanceState == null) {
 			size = 3;
 			turn = 0;
@@ -51,13 +55,29 @@ public class MainActivity extends Activity implements OnTouchListener {
 	@Override
 	public void onStart() {
 		super.onStart();
-				
+						
 		raster = (RasterView) findViewById(R.id.rasterView);
 		raster.init((int) Math.sqrt(level.size()));
 		raster.build();
 		raster.update(level);
 		
 		update_button();
+		
+		click_sound = MediaPlayer.create(this, R.raw.click_sound);
+		slide_sound = MediaPlayer.create(this, R.raw.slide_sound);
+		solved_sound = MediaPlayer.create(this, R.raw.solved_sound);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+				
+		click_sound.stop();
+		click_sound.release();
+		solved_sound.stop();
+		solved_sound.release();
+		slide_sound.stop();
+		slide_sound.release();
 	}
     
     @Override
@@ -68,7 +88,12 @@ public class MainActivity extends Activity implements OnTouchListener {
     	savedInstanceState.putInt(STATE_TURN, turn);
     	savedInstanceState.putIntegerArrayList(STATE_LEVEL, (ArrayList<Integer>) level);
         super.onSaveInstanceState(savedInstanceState);
-    }   
+    }  
+    
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    	super.onRestoreInstanceState(savedInstanceState);
+    }
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,6 +124,8 @@ public class MainActivity extends Activity implements OnTouchListener {
 	}
 
 	private void end() {
+		solved_sound.start();
+		
 		String message = getResources().getString(R.string.message);
 		TextView text = (TextView) findViewById(R.id.textView);
 		
@@ -142,6 +169,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 	}
 	
 	public void button_click(View v) {
+		click_sound.start();
 		if (level.solved()) {
 			shuffle();
 		} else {
@@ -174,7 +202,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		int steps = level.slide(position);
 				
 		if (steps == 0) return false;
-		
+				
 		turn += steps;
 		Log.d("onTouch", "Turns taken so far: " +turn);
 		
@@ -184,8 +212,12 @@ public class MainActivity extends Activity implements OnTouchListener {
 			solved = level.solved();
 			if (solved) {
 				end();
+				return false;
 			}
 		}
+		
+		slide_sound.start();
+		
 		return false;
 	}
 }

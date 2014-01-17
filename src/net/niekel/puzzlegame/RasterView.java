@@ -26,11 +26,6 @@ public class RasterView extends LinearLayout {
 		this.context = context;
 	}
 	
-	public RasterView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		this.context = context;
-	}
-	
 	public void init(int s) {
 		rows = s;
 		build_puzzles();
@@ -98,7 +93,7 @@ public class RasterView extends LinearLayout {
 		puzzle3x3[5] = R.drawable.piece_3x3_5;
 		puzzle3x3[6] = R.drawable.piece_3x3_6;
 		puzzle3x3[7] = R.drawable.piece_3x3_7;
-		puzzle3x3[8] = R.drawable.piece_3x3_last;
+		puzzle3x3[8] = R.drawable.piece_3x3_8;
 	}
 
 	private class ColView extends LinearLayout {
