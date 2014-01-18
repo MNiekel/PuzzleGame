@@ -2,6 +2,7 @@ package org.softnez.slidingpuzzle;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -38,6 +39,7 @@ public class RasterView extends LinearLayout {
 		}
 				    
 		setWeightSum(rows);
+		setBackgroundColor(Color.DKGRAY);
 		
 		for (int x = 0; x < rows; x++) {
 			ColView col = new ColView(context, rows, x, (OnTouchListener) context);
@@ -81,6 +83,7 @@ public class RasterView extends LinearLayout {
 				image.setId(id);
 				image.setAdjustViewBounds(true);
 				image.setScaleType(ScaleType.FIT_CENTER);
+				image.setPadding(1, 1, 1, 1);
 				image.setLayoutParams(params);
 				image.setOnTouchListener(listener);
 				addView(image);
