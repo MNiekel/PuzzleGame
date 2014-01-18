@@ -21,15 +21,17 @@ public class MainActivity extends Activity implements OnTouchListener {
 	static final String STATE_TURN = "turn";
 	static final String STATE_LEVEL = "level";
 	static final String STATE_SOLVED = "solved";
+	static final String STATE_IMAGE = "image";
 	
 	private Level level = new Level();
 	
-	private int steps = 20;
+	private int steps = 30;
 	
 	private int size;
 	private int turn;
 	private boolean solved;
 	private Bitmap[] puzzle;
+	private int image_id;
 	private RasterView raster;
 	
 	private MediaPlayer click_sound;
@@ -45,11 +47,13 @@ public class MainActivity extends Activity implements OnTouchListener {
 			turn = 0;
 			solved = true;
 			level.build(size*size);
+			image_id = R.drawable.klaproos_256;
 		} else {
 			solved = savedInstanceState.getBoolean(STATE_SOLVED);
 			turn = savedInstanceState.getInt(STATE_TURN);
 			size = savedInstanceState.getInt(STATE_SIZE);
 			level.copy(savedInstanceState.getIntegerArrayList(STATE_LEVEL));
+			image_id = savedInstanceState.getInt(STATE_IMAGE);
 		}
 		
 		setContentView(R.layout.activity_main);
@@ -60,7 +64,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		super.onStart();
 		
 		puzzle = new Bitmap[size*size];
-		PuzzleCreator.make_pieces(this, R.drawable.klaproos_256, puzzle);
+		PuzzleCreator.make_pieces(this, image_id, puzzle);
 						
 		raster = (RasterView) findViewById(R.id.rasterView);
 		raster.init((int) Math.sqrt(level.size()));
@@ -98,6 +102,7 @@ public class MainActivity extends Activity implements OnTouchListener {
     	savedInstanceState.putInt(STATE_SIZE, size);
     	savedInstanceState.putInt(STATE_TURN, turn);
     	savedInstanceState.putIntegerArrayList(STATE_LEVEL, (ArrayList<Integer>) level);
+    	savedInstanceState.putInt(STATE_IMAGE, image_id);
         super.onSaveInstanceState(savedInstanceState);
     }  
     
@@ -164,7 +169,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		level.build(size*size);
 		
 		puzzle = new Bitmap[size*size];
-		PuzzleCreator.make_pieces(this, R.drawable.klaproos_256, puzzle);
+		PuzzleCreator.make_pieces(this, image_id, puzzle);
 		
 		raster.reset(level, puzzle);
 		solved = true;
@@ -195,9 +200,10 @@ public class MainActivity extends Activity implements OnTouchListener {
 	private void resize() {
 		if (size == 3) { 
 			size = 4;
-			
+			image_id = R.drawable.dalek_256;
 		} else {
 			size = 3;
+			image_id = R.drawable.klaproos_256;
 		}
 		
 		reset();
