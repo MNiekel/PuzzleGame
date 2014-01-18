@@ -1,6 +1,7 @@
 package org.softnez.slidingpuzzle;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -13,8 +14,8 @@ public class RasterView extends LinearLayout {
 
 	private int rows = 0;
 	private Context context;
-	private int[] puzzle4x4 = new int[16];
-	private int[] puzzle3x3 = new int[9];
+	private Bitmap[] puzzle3x3 = new Bitmap[9];
+	private Bitmap[] puzzle4x4 = new Bitmap[16];
 
 	public RasterView(Context context) {
 		super(context);
@@ -28,7 +29,6 @@ public class RasterView extends LinearLayout {
 	
 	public void init(int s) {
 		rows = s;
-		build_puzzles();
 	}
 	
 	public void build() {
@@ -45,55 +45,24 @@ public class RasterView extends LinearLayout {
 		}
 	}
 	
-	public void update(Level level) {
+	public void update(Level level, Bitmap[] puzzle) {
+		if (level.size() != puzzle.length) {
+			Log.e("RasterView", "Uncompatible puzzle and level");
+			return;
+		}
 		for (int i = 0; i < level.size(); i++) {
 			ImageView v = (ImageView) findViewById(i);
-			if (level.size() == 16) {
-				v.setImageResource(puzzle4x4[level.get(i)]);
-			} else {
-				v.setImageResource(puzzle3x3[level.get(i)]);
-			}
+			v.setImageBitmap(puzzle[level.get(i)]);
 		}
 	}
 	
-	public void reset(Level level) {
+	public void reset(Level level, Bitmap[] puzzle) {
 		int s = (int) Math.sqrt(level.size());
-		if (s == rows) {
-			update(level);
-		} else {
+		if (s != rows) {
 			rows = s;
 			build();
-			update(level);
 		}
-	}
-	
-	private void build_puzzles() {
-		puzzle4x4[0] = R.drawable.piece_4x4_0;
-		puzzle4x4[1] = R.drawable.piece_4x4_1;
-		puzzle4x4[2] = R.drawable.piece_4x4_2;
-		puzzle4x4[3] = R.drawable.piece_4x4_3;
-		puzzle4x4[4] = R.drawable.piece_4x4_4;
-		puzzle4x4[5] = R.drawable.piece_4x4_5;
-		puzzle4x4[6] = R.drawable.piece_4x4_6;
-		puzzle4x4[7] = R.drawable.piece_4x4_7;
-		puzzle4x4[8] = R.drawable.piece_4x4_8;
-		puzzle4x4[9] = R.drawable.piece_4x4_9;
-		puzzle4x4[10] = R.drawable.piece_4x4_10;
-		puzzle4x4[11] = R.drawable.piece_4x4_11;
-		puzzle4x4[12] = R.drawable.piece_4x4_12;
-		puzzle4x4[13] = R.drawable.piece_4x4_13;
-		puzzle4x4[14] = R.drawable.piece_4x4_14;
-		puzzle4x4[15] = R.drawable.piece_4x4_15;
-		
-		puzzle3x3[0] = R.drawable.piece_3x3_0;
-		puzzle3x3[1] = R.drawable.piece_3x3_1;
-		puzzle3x3[2] = R.drawable.piece_3x3_2;
-		puzzle3x3[3] = R.drawable.piece_3x3_3;
-		puzzle3x3[4] = R.drawable.piece_3x3_4;
-		puzzle3x3[5] = R.drawable.piece_3x3_5;
-		puzzle3x3[6] = R.drawable.piece_3x3_6;
-		puzzle3x3[7] = R.drawable.piece_3x3_7;
-		puzzle3x3[8] = R.drawable.piece_3x3_8;
+		update(level, puzzle);
 	}
 
 	private class ColView extends LinearLayout {

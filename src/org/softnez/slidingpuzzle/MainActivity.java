@@ -2,6 +2,7 @@ package org.softnez.slidingpuzzle;
 
 import java.util.ArrayList;
 
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.app.Activity;
@@ -28,7 +29,9 @@ public class MainActivity extends Activity implements OnTouchListener {
 	private int size;
 	private int turn;
 	private boolean solved;
+	private Bitmap[] puzzle;
 	private RasterView raster;
+	
 	private MediaPlayer click_sound;
 	private MediaPlayer slide_sound;
 	private MediaPlayer solved_sound;
@@ -55,11 +58,14 @@ public class MainActivity extends Activity implements OnTouchListener {
 	@Override
 	public void onStart() {
 		super.onStart();
+		
+		puzzle = new Bitmap[size*size];
+		PuzzleCreator.make_pieces(this, R.drawable.klaproos_256, puzzle);
 						
 		raster = (RasterView) findViewById(R.id.rasterView);
 		raster.init((int) Math.sqrt(level.size()));
 		raster.build();
-		raster.update(level);
+		raster.update(level, puzzle);
 		
 		update_button();
 	}
@@ -156,7 +162,11 @@ public class MainActivity extends Activity implements OnTouchListener {
 	
 	private void reset() {
 		level.build(size*size);
-		raster.reset(level);
+		
+		puzzle = new Bitmap[size*size];
+		PuzzleCreator.make_pieces(this, R.drawable.klaproos_256, puzzle);
+		
+		raster.reset(level, puzzle);
 		solved = true;
 		turn=0;
 		
@@ -166,7 +176,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 	
 	private void shuffle() {
 		level.shuffle(steps * size);
-		raster.update(level);
+		raster.update(level, puzzle);
 		turn = 0;
 		solved = level.solved();
 		update_button();
@@ -185,9 +195,11 @@ public class MainActivity extends Activity implements OnTouchListener {
 	private void resize() {
 		if (size == 3) { 
 			size = 4;
+			
 		} else {
 			size = 3;
 		}
+		
 		reset();
 	}
 	
@@ -211,7 +223,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		turn += steps;
 		Log.d("onTouch", "Turns taken so far: " +turn);
 		
-		raster.update(level);
+		raster.update(level, puzzle);
 		
 		if (position == level.size()-1) {
 			solved = level.solved();
